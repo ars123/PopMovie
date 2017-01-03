@@ -10,4 +10,42 @@
     tools:showIn="@layout/activity_detail">
 
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageThumbnail"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" Release Date"
+        android:padding="16dp"
+        android:layout_below="@+id/imageThumbnail"
+        android:id="@+id/dateView"
+        />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Original Title"
+            android:layout_below="@+id/dateView"
+            android:id="@+id/titleView"
+            />
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Average vote"
+        android:layout_below="@+id/titleView"
+        android:id="@+id/voteView"
+        />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="overview"
+            android:layout_below="@+id/voteView"
+            android:id="@+id/overview"
+            />
+
 </RelativeLayout>

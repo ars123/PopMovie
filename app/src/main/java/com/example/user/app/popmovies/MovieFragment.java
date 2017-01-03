@@ -1,7 +1,10 @@
 package com.example.user.app.popmovies;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,14 +32,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MovieFragment extends Fragment {
 
-    public MovieAdapter mPopulateMovie;
+    public MovieAdapter mMovieAdapter;
     List<Uri> posterURLs = new ArrayList<Uri>();
+    Bundle bundle=new Bundle();
+    String[] posterPaths,title,overview,popularity,rating,releaseDate;
 
     public MovieFragment() {
     }
@@ -61,13 +68,23 @@ public class MovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView)rootView.findViewById(R.id.movies_grid);
-        mPopulateMovie = new MovieAdapter(inflater,posterURLs);
-        gridView.setAdapter(mPopulateMovie);
+        mMovieAdapter = new MovieAdapter(inflater,posterURLs);
+        gridView.setAdapter(mMovieAdapter);
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), "" + i,
-                        Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(getActivity(),DetailActivity.class);
+                bundle.putString("Thumbnail", String.valueOf(mMovieAdapter.getItem(i)));
+                bundle.putStringArray("title",title);
+                bundle.putStringArray("overview",overview);
+                bundle.putStringArray("votingAvg",rating);
+                bundle.putStringArray("releaseDate",releaseDate);
+                intent.putExtra("movie_bundle",bundle);
+                startActivity(intent);
+//                Toast.makeText(getActivity(), "" + i,
+//                        Toast.LENGTH_SHORT).show();
             }
         });
         return rootView;
@@ -113,12 +130,12 @@ public class MovieFragment extends Fragment {
             JSONObject allMovieData = new JSONObject(movieJsonStr);
             JSONArray resultsArray = allMovieData.getJSONArray(RESULT_LIST);
 
-            String[] posterPaths = new String[resultsArray.length()];
-            String[] title = new String[resultsArray.length()];
-            String[] overview = new String[resultsArray.length()];
-            String[] popularity = new String[resultsArray.length()];
-            String[] rating = new String[resultsArray.length()];
-            String[] releaseDate = new String[resultsArray.length()];
+             posterPaths = new String[resultsArray.length()];
+             title = new String[resultsArray.length()];
+             overview = new String[resultsArray.length()];
+             popularity = new String[resultsArray.length()];
+             rating = new String[resultsArray.length()];
+             releaseDate = new String[resultsArray.length()];
 
             for(int i = 0; i < resultsArray.length(); i++) {
 
@@ -151,7 +168,7 @@ public class MovieFragment extends Fragment {
             String movieJsonStr = null;
 
             String sort_by = "popularity.desc";
-            String apiKey = "e04f08387e30e9ba46f930a31e0d69fd";
+            String apiKey = "";
 
             try{
 
@@ -228,6 +245,7 @@ public class MovieFragment extends Fragment {
                     posterURLs.add(uri);
                 }
             }
+            mMovieAdapter.notifyDataSetChanged();
         }
     }
 
