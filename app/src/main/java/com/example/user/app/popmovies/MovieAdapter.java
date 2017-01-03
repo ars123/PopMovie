@@ -25,11 +25,9 @@ public class MovieAdapter extends BaseAdapter {
     private int mLayout;
     private int mId;
 
-    public MovieAdapter(LayoutInflater inf,int layout, int id, List<?> imagelist){
+    public MovieAdapter(LayoutInflater inf, List<?> imagelist){
         mImageList=imagelist;
         inflater=inf;
-        mLayout=layout;
-        mId = id;
     }
 
     @Override
@@ -49,12 +47,12 @@ public class MovieAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ImageView imageView;
+        ImageView imageView = null;
         if (view == null) {
             // if it's not recycled, create a new ImageView
             imageView = new ImageView(inflater.getContext());
         } else {
-            imageView = (ImageView) view;
+            imageView=(ImageView)view;
         }
 
         Picasso.with(inflater.getContext()).load(mImageList.get(i).toString()).into(imageView);

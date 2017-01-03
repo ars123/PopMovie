@@ -61,7 +61,7 @@ public class MovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView)rootView.findViewById(R.id.movies_grid);
-        mPopulateMovie = new MovieAdapter(inflater,R.layout.list_item_movie,R.id.movies_image,posterURLs);
+        mPopulateMovie = new MovieAdapter(inflater,posterURLs);
         gridView.setAdapter(mPopulateMovie);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -103,12 +103,12 @@ public class MovieFragment extends Fragment {
 
             // These are the names of the JSON objects that need to be extracted.
             final String RESULT_LIST = "results";
-            final String TITLE = "original_title";
+            final String TITLE = "original_title";  // show in detail activity
             final String POSTER_URL = "poster_path";
-            final String OVERVIEW = "overview";
+            final String OVERVIEW = "overview";  // show in detail activity
             final String POPULARITY = "popularity";
-            final String RATING = "vote_average";
-            final String RELEASE_DATE = "release_date";
+            final String RATING = "vote_average";  //show in detail activity
+            final String RELEASE_DATE = "release_date";  // show in detail activity
 
             JSONObject allMovieData = new JSONObject(movieJsonStr);
             JSONArray resultsArray = allMovieData.getJSONArray(RESULT_LIST);
@@ -133,6 +133,9 @@ public class MovieFragment extends Fragment {
                 rating[i] = eachMovie.getString(RATING);
                 releaseDate[i] = eachMovie.getString(RELEASE_DATE);
                 Log.v("poster path", posterPaths[i]);
+                Log.v("release date",releaseDate[i]);
+                Log.v("vote average",rating[i]);
+                Log.v("original title",title[i]);
             }
 
             return posterPaths;
@@ -148,11 +151,11 @@ public class MovieFragment extends Fragment {
             String movieJsonStr = null;
 
             String sort_by = "popularity.desc";
-            String apiKey = "";
+            String apiKey = "e04f08387e30e9ba46f930a31e0d69fd";
 
             try{
 
-                //For building the URL for the movies db api
+                //For building the URL for the movies db api  http://api.themoviedb.org/3/discover/movie?sort_by=popularity_desc&api_key=
                 final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
                 final String SORT_PARAM = "sort_by";
                 final String API_PARAM = "api_key";
