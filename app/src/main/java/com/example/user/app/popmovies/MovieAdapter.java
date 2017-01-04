@@ -26,9 +26,9 @@ public class MovieAdapter extends BaseAdapter {
 
     private final Movie mLock= new Movie();
 
-    private List<Movie> mObjects = new ArrayList<Movie>();
+    private ArrayList<Movie> mObjects = new ArrayList<Movie>();
 
-    public MovieAdapter(Context context,List<Movie> objects) {
+    public MovieAdapter(Context context,ArrayList<Movie> objects) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mObjects = objects;
@@ -87,12 +87,12 @@ public class MovieAdapter extends BaseAdapter {
 
         final Movie movie = getItem(position);
 
-        String image_url = "http://image.tmdb.org/t/p/w185" + movie.getMoviePosterPath();
+        String image_url = "http://image.tmdb.org/t/p/w185" + movie.getPosterImage();
 
         viewHolder = (ViewHolder) view.getTag();
 
         Picasso.with(getContext()).load(image_url).into(viewHolder.imageView);
-        viewHolder.titleView.setText(movie.getMovieTitle());
+        viewHolder.titleView.setText(movie.getTitle());
         return view;
     }
 

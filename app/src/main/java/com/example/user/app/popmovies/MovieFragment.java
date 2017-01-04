@@ -40,20 +40,13 @@ import java.util.Objects;
 public class MovieFragment extends Fragment {
 
     public MovieAdapter mMovieAdapter;
-    List<Movie> mMovies = new ArrayList<Movie>();
+    ArrayList<Movie> mMovies = new ArrayList<Movie>();
     Bundle bundle=new Bundle();
-    /* Variables for movie details */
-    private static String movieTitle;
-    private static int movieId;
-    private static String moviePosterPath;
-    private static String movieOverview;
-    private static double movieVoteCount;
-    private static String movieOriginalTitle;
-    private static double movieVoteAverage;
-    private static double moviePopularity;
-    private static String movieBackdropPath;
-    private static String movieReleaseDate;
-
+    private static final String SORT_SETTING_KEY = "sort_setting";
+    private static final String POPULARITY_DESC = "popularity.desc";
+    private static final String RATING_DESC = "vote_average.desc";
+    private static final String FAVORITE = "favorite";
+    private static final String MOVIES_KEY = "movies";
 
     public MovieFragment() {
     }
@@ -88,10 +81,10 @@ public class MovieFragment extends Fragment {
 
                 Movie currentMovie = mMovieAdapter.getItem(i);
                 Intent movieDetailIntent = new Intent(getActivity(),DetailActivity.class);
-                movieDetailIntent.putExtra("title", currentMovie.getMovieOriginalTitle());
-                movieDetailIntent.putExtra("overview",currentMovie.getMovieOverview());
-                movieDetailIntent.putExtra("voting",currentMovie.getMovieVoteAverage());
-                movieDetailIntent.putExtra("releaseDate",currentMovie.getMovieReleaseDate());
+                movieDetailIntent.putExtra("title", currentMovie.getTitle());
+                movieDetailIntent.putExtra("overview",currentMovie.getOverview());
+                movieDetailIntent.putExtra("voting",currentMovie.getRating());
+                movieDetailIntent.putExtra("releaseDate",currentMovie.getDate());
                 startActivity(movieDetailIntent);
 
 
@@ -107,65 +100,30 @@ public class MovieFragment extends Fragment {
     }
 
 
-    public class FetchMovieTask extends AsyncTask<Void, Void,List<Movie>>{
+    public class FetchMovieTask extends AsyncTask<Void, Void,ArrayList<Movie>>{
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
 
-        private List<Movie> getMovieDataFromJson(String movieJsonStr)
+        private ArrayList<Movie> getMovieDataFromJson(String movieJsonStr)
                 throws JSONException{
-            // Create a movie reference
-            Movie movie;
-            // Parse the jsonResponse string
-            JSONObject movieJsonResponse = new JSONObject(movieJsonStr);
-            if (movieJsonResponse.has("results")) {
-                JSONArray resultsArray = movieJsonResponse.getJSONArray("results");
-                if (resultsArray.length() > 0) {
-                    for (int i = 0; i < resultsArray.length(); i++) {
-                        JSONObject movieDetail = resultsArray.getJSONObject(i);
-                        if (movieDetail.has("title")) {
-                            movieTitle = movieDetail.getString("title");
-                        }
-                        if (movieDetail.has("id")) {
-                            movieId = movieDetail.getInt("id");
-                        }
-                        if (movieDetail.has("poster_path")) {
-                            moviePosterPath = movieDetail.getString("poster_path");
-                            Log.v("poster path",moviePosterPath);
-                        }
-                        if (movieDetail.has("overview")) {
-                            movieOverview = movieDetail.getString("overview");
-                        }
-                        if (movieDetail.has("original_title")) {
-                            movieOriginalTitle = movieDetail.getString("original_title");
-                            Log.v("Movie Title:",movieOriginalTitle);
-                        }
-                        if (movieDetail.has("backdrop_path")) {
-                            movieBackdropPath = movieDetail.getString("backdrop_path");
-                        }
-                        if (movieDetail.has("popularity")) {
-                            moviePopularity = movieDetail.getDouble("popularity");
-                        }
-                        if (movieDetail.has("vote_count")) {
-                            movieVoteCount = movieDetail.getDouble("vote_count");
-                        }
-                        if (movieDetail.has("vote_average")) {
-                            movieVoteAverage = movieDetail.getDouble("vote_average");
-                        }
-                        if (movieDetail.has("release_date")) {
-                            movieReleaseDate = movieDetail.getString("release_date");
-                        }
+            JSONObject movieJson = new JSONObject(movieJsonStr);
+            JSONArray movieArray = movieJson.getJSONArray("results");
 
-                    }
-                }
+            ArrayList<Movie> results = new ArrayList<>();
+
+            for(int i = 0; i < movieArray.length(); i++) {
+                JSONObject movie = movieArray.getJSONObject(i);
+                Movie movieModel = new Movie(movie);
+                results.add(movieModel);
             }
-            // Return the list of Movies
-            return mMovies;
+
+            return results;
         }
 
 
         @Override
-        protected List<Movie> doInBackground(Void... voids) {
+        protected ArrayList<Movie> doInBackground(Void... voids) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -241,18 +199,20 @@ public class MovieFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<Movie> result) {
+        protected void onPostExecute(ArrayList<Movie> result) {
             super.onPostExecute(result);
-            if(result != null){
-                for (int i=0; i<result.size();i++){
-                    mMovies.add(new Movie(movieTitle, movieId, moviePosterPath, movieOverview, movieVoteCount,
-                            movieOriginalTitle, movieVoteAverage, moviePopularity, movieBackdropPath, movieReleaseDate));
+            Log.v("MY_TAG", "movies result array is " + result.size());
+            if (result != null) {
+                if (mMovieAdapter != null) {
+                    mMovieAdapter.setData(result);
                 }
+                mMovies = new ArrayList<>();
+                mMovies.addAll(result);
             }
+
             mMovieAdapter.notifyDataSetChanged();
         }
     }
-
- }
+}
 
 

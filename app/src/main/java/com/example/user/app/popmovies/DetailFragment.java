@@ -18,6 +18,9 @@ import android.widget.TextView;
 public class DetailFragment extends Fragment {
 
     Movie movie;
+    public static final String TAG = DetailFragment.class.getSimpleName();
+
+    static final String DETAIL_MOVIE = "DETAIL_MOVIE";
 
     public DetailFragment() {
     }
@@ -34,11 +37,13 @@ public class DetailFragment extends Fragment {
         Bundle bundle=getArguments();
 
         if(bundle!=null){
-            movie = getArguments().getParcelable("movie");
-            titleView.setText(movie.getMovieTitle());
-            overviewView.setText(movie.getMovieOverview());
-            votingView.setText((int) movie.getMovieVoteAverage());
-            releaseDateView.setText(movie.getMovieReleaseDate());
+            movie = bundle.getParcelable(DetailFragment.DETAIL_MOVIE);
+            if(movie!=null) {
+                titleView.setText(movie.getTitle());
+                overviewView.setText(movie.getOverview());
+                votingView.setText(movie.getOverview());
+                releaseDateView.setText(movie.getDate());
+            }
         }
         return rootView;
     }
