@@ -6,4 +6,14 @@
         android:layout_height="200dp"
         android:scaleType="centerCrop"
         android:id="@+id/movies_image"/>
+    <TextView
+        android:id="@+id/grid_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="18sp"
+        android:padding="5dp"
+        android:gravity="center|left"
+        android:ellipsize="end"
+        android:textColor="?android:attr/textColorSecondary" />
+
 </FrameLayout>

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -91,15 +92,16 @@ public class MovieAdapter extends BaseAdapter {
         viewHolder = (ViewHolder) view.getTag();
 
         Picasso.with(getContext()).load(image_url).into(viewHolder.imageView);
-
+        viewHolder.titleView.setText(movie.getMovieTitle());
         return view;
     }
 
     public static class ViewHolder {
         public final ImageView imageView;
-
+        public final TextView titleView;
         public ViewHolder(View view) {
             imageView = (ImageView) view.findViewById(R.id.movies_image);
+            titleView = (TextView)view.findViewById(R.id.grid_item_title);
         }
     }
 }
