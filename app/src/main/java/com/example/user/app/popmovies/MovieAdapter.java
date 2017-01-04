@@ -26,9 +26,9 @@ public class MovieAdapter extends BaseAdapter {
 
     private final Movie mLock= new Movie();
 
-    private ArrayList<Movie> mObjects;
+    private List<Movie> mObjects = new ArrayList<Movie>();
 
-    public MovieAdapter(Context context, ArrayList<Movie> objects) {
+    public MovieAdapter(Context context,List<Movie> objects) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mObjects = objects;

@@ -40,7 +40,7 @@ import java.util.Objects;
 public class MovieFragment extends Fragment {
 
     public MovieAdapter mMovieAdapter;
-    ArrayList<Movie> mMovies = new ArrayList<Movie>();
+    List<Movie> mMovies = new ArrayList<Movie>();
     Bundle bundle=new Bundle();
     /* Variables for movie details */
     private static String movieTitle;
@@ -79,7 +79,7 @@ public class MovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView)rootView.findViewById(R.id.movies_grid);
-        mMovieAdapter = new MovieAdapter(getActivity(),new ArrayList<Movie>());
+        mMovieAdapter = new MovieAdapter(getActivity(),mMovies);
         gridView.setAdapter(mMovieAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -107,12 +107,12 @@ public class MovieFragment extends Fragment {
     }
 
 
-    public class FetchMovieTask extends AsyncTask<Void, Void,ArrayList<Movie>>{
+    public class FetchMovieTask extends AsyncTask<Void, Void,List<Movie>>{
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
 
-        private ArrayList<Movie> getMovieDataFromJson(String movieJsonStr)
+        private List<Movie> getMovieDataFromJson(String movieJsonStr)
                 throws JSONException{
             // Create a movie reference
             Movie movie;
@@ -165,7 +165,7 @@ public class MovieFragment extends Fragment {
 
 
         @Override
-        protected ArrayList<Movie> doInBackground(Void... voids) {
+        protected List<Movie> doInBackground(Void... voids) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -241,7 +241,7 @@ public class MovieFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Movie> result) {
+        protected void onPostExecute(List<Movie> result) {
             super.onPostExecute(result);
             if(result != null){
                 for (int i=0; i<result.size();i++){
