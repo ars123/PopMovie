@@ -40,9 +40,20 @@ import java.util.Objects;
 public class MovieFragment extends Fragment {
 
     public MovieAdapter mMovieAdapter;
-    List<Uri> posterURLs = new ArrayList<Uri>();
+    ArrayList<Movie> mMovies = new ArrayList<Movie>();
     Bundle bundle=new Bundle();
-    String[] posterPaths,title,overview,popularity,rating,releaseDate;
+    /* Variables for movie details */
+    private static String movieTitle;
+    private static int movieId;
+    private static String moviePosterPath;
+    private static String movieOverview;
+    private static double movieVoteCount;
+    private static String movieOriginalTitle;
+    private static double movieVoteAverage;
+    private static double moviePopularity;
+    private static String movieBackdropPath;
+    private static String movieReleaseDate;
+
 
     public MovieFragment() {
     }
@@ -68,23 +79,23 @@ public class MovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView)rootView.findViewById(R.id.movies_grid);
-        mMovieAdapter = new MovieAdapter(inflater,posterURLs);
+        mMovieAdapter = new MovieAdapter(inflater,mMovies);
         gridView.setAdapter(mMovieAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(),DetailActivity.class);
-                bundle.putString("Thumbnail", String.valueOf(mMovieAdapter.getItem(i)));
-                bundle.putStringArray("title",title);
-                bundle.putStringArray("overview",overview);
-                bundle.putStringArray("votingAvg",rating);
-                bundle.putStringArray("releaseDate",releaseDate);
-                intent.putExtra("movie_bundle",bundle);
-                startActivity(intent);
-//                Toast.makeText(getActivity(), "" + i,
-//                        Toast.LENGTH_SHORT).show();
+                Movie currentMovie = mMovies.get(i);
+                Intent movieDetailIntent = new Intent(getActivity(),DetailActivity.class);
+                movieDetailIntent.putExtra("title", currentMovie.getMovieOriginalTitle());
+                movieDetailIntent.putExtra("overview",currentMovie.getMovieOverview());
+                movieDetailIntent.putExtra("voting",currentMovie.getMovieVoteAverage());
+                movieDetailIntent.putExtra("releaseDate",currentMovie.getMovieReleaseDate());
+
+                startActivity(movieDetailIntent);
+
+
             }
         });
         return rootView;
@@ -97,78 +108,72 @@ public class MovieFragment extends Fragment {
     }
 
 
-    public class FetchMovieTask extends AsyncTask<Void, Void, String[]>{
+    public class FetchMovieTask extends AsyncTask<Void, Void,ArrayList<Movie>>{
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
-        /**
-         * Prepare image URL for presentation.
-         */
-        private String formatURL(String relativeURL) {
-            String imageBaseURL = "http://image.tmdb.org/t/p/";
-            String size = "w185";
-            relativeURL = relativeURL.substring(1);
-            Uri uri = Uri.parse(imageBaseURL).buildUpon()
-                    .appendPath(size)
-                    .appendPath(relativeURL).build();
-            return uri.toString();
-        }
 
-
-        private String[] getMovieDataFromJson(String movieJsonStr)
+        private ArrayList<Movie> getMovieDataFromJson(String movieJsonStr)
                 throws JSONException{
+            // Create a movie reference
+            Movie movie;
+            // Parse the jsonResponse string
+            JSONObject movieJsonResponse = new JSONObject(movieJsonStr);
+            if (movieJsonResponse.has("results")) {
+                JSONArray resultsArray = movieJsonResponse.getJSONArray("results");
+                if (resultsArray.length() > 0) {
+                    for (int i = 0; i < resultsArray.length(); i++) {
+                        JSONObject movieDetail = resultsArray.getJSONObject(i);
+                        if (movieDetail.has("title")) {
+                            movieTitle = movieDetail.getString("title");
+                        }
+                        if (movieDetail.has("id")) {
+                            movieId = movieDetail.getInt("id");
+                        }
+                        if (movieDetail.has("poster_path")) {
+                            moviePosterPath = movieDetail.getString("poster_path");
+                            Log.v("poster path",moviePosterPath);
+                        }
+                        if (movieDetail.has("overview")) {
+                            movieOverview = movieDetail.getString("overview");
+                        }
+                        if (movieDetail.has("original_title")) {
+                            movieOriginalTitle = movieDetail.getString("original_title");
+                            Log.v("Movie Title:",movieOriginalTitle);
+                        }
+                        if (movieDetail.has("backdrop_path")) {
+                            movieBackdropPath = movieDetail.getString("backdrop_path");
+                        }
+                        if (movieDetail.has("popularity")) {
+                            moviePopularity = movieDetail.getDouble("popularity");
+                        }
+                        if (movieDetail.has("vote_count")) {
+                            movieVoteCount = movieDetail.getDouble("vote_count");
+                        }
+                        if (movieDetail.has("vote_average")) {
+                            movieVoteAverage = movieDetail.getDouble("vote_average");
+                        }
+                        if (movieDetail.has("release_date")) {
+                            movieReleaseDate = movieDetail.getString("release_date");
+                        }
 
-            // These are the names of the JSON objects that need to be extracted.
-            final String RESULT_LIST = "results";
-            final String TITLE = "original_title";  // show in detail activity
-            final String POSTER_URL = "poster_path";
-            final String OVERVIEW = "overview";  // show in detail activity
-            final String POPULARITY = "popularity";
-            final String RATING = "vote_average";  //show in detail activity
-            final String RELEASE_DATE = "release_date";  // show in detail activity
-
-            JSONObject allMovieData = new JSONObject(movieJsonStr);
-            JSONArray resultsArray = allMovieData.getJSONArray(RESULT_LIST);
-
-             posterPaths = new String[resultsArray.length()];
-             title = new String[resultsArray.length()];
-             overview = new String[resultsArray.length()];
-             popularity = new String[resultsArray.length()];
-             rating = new String[resultsArray.length()];
-             releaseDate = new String[resultsArray.length()];
-
-            for(int i = 0; i < resultsArray.length(); i++) {
-
-                // Get the JSON object representing one movie's details
-                JSONObject eachMovie = resultsArray.getJSONObject(i);
-
-                title[i] = eachMovie.getString(TITLE);
-                String relativeURL = eachMovie.getString(POSTER_URL);
-                posterPaths[i] = formatURL(relativeURL);
-                overview[i] = eachMovie.getString(OVERVIEW);
-                popularity[i] = eachMovie.getString(POPULARITY);
-                rating[i] = eachMovie.getString(RATING);
-                releaseDate[i] = eachMovie.getString(RELEASE_DATE);
-                Log.v("poster path", posterPaths[i]);
-                Log.v("release date",releaseDate[i]);
-                Log.v("vote average",rating[i]);
-                Log.v("original title",title[i]);
+                    }
+                }
             }
-
-            return posterPaths;
-
+            // Return the list of Movies
+            return mMovies;
         }
+
 
         @Override
-        protected String[] doInBackground(Void... params) {
-
+        protected ArrayList<Movie> doInBackground(Void... voids) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             String movieJsonStr = null;
 
             String sort_by = "popularity.desc";
-            String apiKey = "";
+            String apiKey = "e04f08387e30e9ba46f930a31e0d69fd";
 
             try{
 
@@ -232,22 +237,23 @@ public class MovieFragment extends Fragment {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
-         return null;
+            return null;
 
         }
 
         @Override
-        protected void onPostExecute(String[] result) {
+        protected void onPostExecute(ArrayList<Movie> result) {
             super.onPostExecute(result);
             if(result != null){
-                for (int i=0; i<result.length;i++){
-                    Uri uri = Uri.parse(result[i]);
-                    posterURLs.add(uri);
+                for (int i=0; i<result.size();i++){
+                    mMovies.add(new Movie(movieTitle, movieId, moviePosterPath, movieOverview, movieVoteCount,
+                            movieOriginalTitle, movieVoteAverage, moviePopularity, movieBackdropPath, movieReleaseDate));
                 }
             }
             mMovieAdapter.notifyDataSetChanged();
         }
     }
 
+ }
 
-}
+

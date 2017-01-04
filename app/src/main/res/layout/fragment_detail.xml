@@ -24,28 +24,25 @@
         android:id="@+id/dateView"
         />
 
-        <TextView
+    <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Original Title"
             android:layout_below="@+id/dateView"
-            android:id="@+id/titleView"
-            />
+            android:id="@+id/titleView" />
 
-        <TextView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Average vote"
         android:layout_below="@+id/titleView"
-        android:id="@+id/voteView"
-        />
+        android:id="@+id/voteView"/>
 
-        <TextView
+    <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="overview"
             android:layout_below="@+id/voteView"
-            android:id="@+id/overview"
-            />
+            android:id="@+id/overview" />
 
 </RelativeLayout>

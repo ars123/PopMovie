@@ -20,24 +20,21 @@ import java.util.List;
 public class MovieAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
-    private List<?> mImageList = new ArrayList<>();
-    private Context mContext;
-    private int mLayout;
-    private int mId;
+    private ArrayList<Movie> mMovieList = new ArrayList<Movie>();
 
-    public MovieAdapter(LayoutInflater inf, List<?> imagelist){
-        mImageList=imagelist;
+    public MovieAdapter(LayoutInflater inf, ArrayList<Movie> imagelist){
+        mMovieList=imagelist;
         inflater=inf;
     }
 
     @Override
     public int getCount() {
-        return mImageList.size();
+        return mMovieList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return mImageList.get(i);
+        return mMovieList.get(i);
     }
 
     @Override
@@ -47,15 +44,16 @@ public class MovieAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ImageView imageView = null;
+        ImageView imageView;
+        Movie currentMovie = mMovieList.get(i);
         if (view == null) {
             // if it's not recycled, create a new ImageView
             imageView = new ImageView(inflater.getContext());
         } else {
             imageView=(ImageView)view;
         }
-
-        Picasso.with(inflater.getContext()).load(mImageList.get(i).toString()).into(imageView);
+        String url = "https://image.tmdb.org/t/p/w500/" + currentMovie.getMoviePosterPath().toString();
+        Picasso.with(inflater.getContext()).load(url).into(imageView);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         imageView.setAdjustViewBounds(true);
         return imageView;
