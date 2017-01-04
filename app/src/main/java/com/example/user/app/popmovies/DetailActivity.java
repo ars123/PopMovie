@@ -72,6 +72,9 @@ public class DetailActivity extends AppCompatActivity {
             }
             if(mMovie!=null){
                 overviewView.setText(mMovie.getOverview());
+                titleView.setText(mMovie.getTitle());
+                votingView.setText(mMovie.getRating());
+                releaseDateView.setText(mMovie.getDate());
             }
 
             return rootView;
