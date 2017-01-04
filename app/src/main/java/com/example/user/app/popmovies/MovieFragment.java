@@ -78,13 +78,9 @@ public class MovieFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 Movie currentMovie = mMovieAdapter.getItem(i);
                 Intent movieDetailIntent = new Intent(getActivity(),DetailActivity.class);
-                movieDetailIntent.putExtra("title", currentMovie.getTitle());
-                movieDetailIntent.putExtra("overview",currentMovie.getOverview());
-                movieDetailIntent.putExtra("voting",currentMovie.getRating());
-                movieDetailIntent.putExtra("releaseDate",currentMovie.getDate());
+                movieDetailIntent.putExtra("currentMovie",currentMovie);
                 startActivity(movieDetailIntent);
 
 
@@ -206,7 +202,6 @@ public class MovieFragment extends Fragment {
                 if (mMovieAdapter != null) {
                     mMovieAdapter.setData(result);
                 }
-                mMovies = new ArrayList<>();
                 mMovies.addAll(result);
             }
 
