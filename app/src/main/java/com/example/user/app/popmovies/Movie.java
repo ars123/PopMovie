@@ -8,6 +8,14 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
+
+
+    /**
+     * Create an empty constructor so that an empty movie's object can be referenced
+     * in the MainActivity for storing movie's info
+     */
+    public Movie() {
+    }
     /**
      * Title of the movie
      */
@@ -66,8 +74,7 @@ public class Movie implements Parcelable {
         mMovieRunTimeDuration = runTimeDuration;
     }
 
-    protected Movie(Parcel in) {
-
+    private Movie(Parcel in) {
         mMovieTitle = in.readString();
         mMovieId = in.readInt();
         mMoviePosterPath = in.readString();
@@ -80,6 +87,8 @@ public class Movie implements Parcelable {
         mMovieReleaseDate = in.readString();
         mMovieRunTimeDuration = in.readInt();
     }
+
+
 
 
     public void setMovieRunTimeDuration(int movieDuration) {

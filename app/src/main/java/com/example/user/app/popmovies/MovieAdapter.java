@@ -1,6 +1,7 @@
 package com.example.user.app.popmovies;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,43 +20,87 @@ import java.util.List;
  */
 public class MovieAdapter extends BaseAdapter {
 
-    private LayoutInflater inflater;
-    private ArrayList<Movie> mMovieList = new ArrayList<Movie>();
+    private final Context mContext;
+    private final LayoutInflater mInflater;
 
-    public MovieAdapter(LayoutInflater inf, ArrayList<Movie> imagelist){
-        mMovieList=imagelist;
-        inflater=inf;
+    private final Movie mLock= new Movie();
+
+    private ArrayList<Movie> mObjects;
+
+    public MovieAdapter(Context context, ArrayList<Movie> objects) {
+        mContext = context;
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mObjects = objects;
+    }
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public void add(Movie object) {
+        synchronized (mLock) {
+            mObjects.add(object);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        synchronized (mLock) {
+            mObjects.clear();
+        }
+        notifyDataSetChanged();
+    }
+
+    public void setData(ArrayList<Movie> data) {
+        clear();
+        for (Movie movie : data) {
+            add(movie);
+        }
     }
 
     @Override
     public int getCount() {
-        return mMovieList.size();
+        return mObjects.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return mMovieList.get(i);
+    public Movie getItem(int position) {
+        return mObjects.get(position);
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ImageView imageView;
-        Movie currentMovie = mMovieList.get(i);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = convertView;
+        ViewHolder viewHolder;
+
         if (view == null) {
-            // if it's not recycled, create a new ImageView
-            imageView = new ImageView(inflater.getContext());
-        } else {
-            imageView=(ImageView)view;
+            view = mInflater.inflate(R.layout.list_item_movie, parent, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
         }
-        String url = "https://image.tmdb.org/t/p/w500/" + currentMovie.getMoviePosterPath().toString();
-        Picasso.with(inflater.getContext()).load(url).into(imageView);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        imageView.setAdjustViewBounds(true);
-        return imageView;
+
+        final Movie movie = getItem(position);
+
+        String image_url = "http://image.tmdb.org/t/p/w185" + movie.getMoviePosterPath();
+
+        viewHolder = (ViewHolder) view.getTag();
+
+        Picasso.with(getContext()).load(image_url).into(viewHolder.imageView);
+
+        return view;
+    }
+
+    public static class ViewHolder {
+        public final ImageView imageView;
+
+        public ViewHolder(View view) {
+            imageView = (ImageView) view.findViewById(R.id.movies_image);
+        }
     }
 }
+

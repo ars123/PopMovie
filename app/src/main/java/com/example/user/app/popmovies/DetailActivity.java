@@ -19,7 +19,7 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if(savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction().add(R.id.detailfragment,new DetailFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container,new DetailFragment()).commit();
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

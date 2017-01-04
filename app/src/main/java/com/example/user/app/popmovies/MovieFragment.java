@@ -79,20 +79,19 @@ public class MovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView)rootView.findViewById(R.id.movies_grid);
-        mMovieAdapter = new MovieAdapter(inflater,mMovies);
+        mMovieAdapter = new MovieAdapter(getActivity(),new ArrayList<Movie>());
         gridView.setAdapter(mMovieAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Movie currentMovie = mMovies.get(i);
+                Movie currentMovie = mMovieAdapter.getItem(i);
                 Intent movieDetailIntent = new Intent(getActivity(),DetailActivity.class);
                 movieDetailIntent.putExtra("title", currentMovie.getMovieOriginalTitle());
                 movieDetailIntent.putExtra("overview",currentMovie.getMovieOverview());
                 movieDetailIntent.putExtra("voting",currentMovie.getMovieVoteAverage());
                 movieDetailIntent.putExtra("releaseDate",currentMovie.getMovieReleaseDate());
-
                 startActivity(movieDetailIntent);
 
 
