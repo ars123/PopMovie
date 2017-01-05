@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,16 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /**get the movie's Object from the parent activity**/
+        Movie movie = getIntent().getParcelableExtra("currentMovie");
+
+
+       /* put the movie into the parsel*/
+        Bundle movieDetails = new Bundle();
+        movieDetails.putParcelable(DetailFragment.DETAIL_MOVIE, movie);
+        //Log.v("######", "received movie is " + movie);
+
         if(savedInstanceState == null){
-            Bundle movieDetails = new Bundle();
-            movieDetails.putParcelable(DetailFragment.DETAIL_MOVIE,
-                    getIntent().getParcelableExtra("currentMovie"));
 
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(movieDetails);
@@ -52,7 +59,7 @@ public class DetailActivity extends AppCompatActivity {
         public static final String TAG = DetailFragment.class.getSimpleName();
 
         static final String DETAIL_MOVIE = "DETAIL_MOVIE";
-        Movie mMovie;
+        Movie movie;
         public DetailFragment() {
         }
 
@@ -65,18 +72,23 @@ public class DetailActivity extends AppCompatActivity {
             TextView votingView= (TextView)rootView.findViewById(R.id.voteView);
             TextView releaseDateView = (TextView)rootView.findViewById(R.id.dateView);
 
+            Bundle bundle=getArguments();
 
-            Bundle arguments = getArguments();
-            if (arguments != null) {
-                mMovie = arguments.getParcelable(DetailFragment.DETAIL_MOVIE);
-            }
-            if(mMovie!=null){
-                overviewView.setText(mMovie.getOverview());
-                titleView.setText(mMovie.getTitle());
-                votingView.setText(mMovie.getRating());
-                releaseDateView.setText(mMovie.getDate());
-            }
+            if(bundle!=null){
+                movie = bundle.getParcelable(DETAIL_MOVIE);
 
+                if(movie!=null) {
+
+                    Log.v("######", "received title is " + movie.getTitle());
+                    Log.v("######", "received overview is " + movie.getOverview());
+                    Log.v("######", "received voting is " + movie.getRating());
+                    Log.v("######", "received releaseDate is " + movie.getDate());
+                    titleView.setText(movie.getTitle());
+                    overviewView.setText(movie.getOverview());
+                    votingView.setText(movie.getOverview());
+                    releaseDateView.setText(movie.getDate());
+                }
+            }
             return rootView;
         }
     }
