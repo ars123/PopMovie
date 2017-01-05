@@ -1,10 +1,8 @@
 package com.example.user.app.popmovies;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -17,22 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -45,8 +39,10 @@ public class MovieFragment extends Fragment {
     private static final String SORT_SETTING_KEY = "sort_setting";
     private static final String POPULARITY_DESC = "popularity.desc";
     private static final String RATING_DESC = "vote_average.desc";
-    private static final String FAVORITE = "favorite";
+  //  private static final String FAVORITE = "favorite";
     private static final String MOVIES_KEY = "movies";
+
+    private String mSortMovieBy = POPULARITY_DESC;
 
     public MovieFragment() {
     }
@@ -59,14 +55,56 @@ public class MovieFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_fragment_main, menu);
+
+        MenuItem sort_by_popularity = menu.findItem(R.id.action_sort_by_popularity);
+        MenuItem sort_by_rating = menu.findItem(R.id.action_sort_by_rating);
+
+        if (mSortMovieBy.contentEquals(POPULARITY_DESC)) {
+            if (!sort_by_popularity.isChecked()) {
+                sort_by_popularity.setChecked(true);
+            }
+        } else if (mSortMovieBy.contentEquals(RATING_DESC)) {
+            if (!sort_by_rating.isChecked()) {
+                sort_by_rating.setChecked(true);
+            }
+        }
+
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_sort_by_popularity:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+                mSortMovieBy = POPULARITY_DESC;
+                updateMovies(mSortMovieBy);
+                return true;
+            case R.id.action_sort_by_rating:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+                mSortMovieBy = RATING_DESC;
+                updateMovies(mSortMovieBy);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
+
+    private void updateMovies(String sort_by){
+       new FetchMovieTask().execute(sort_by);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,20 +124,44 @@ public class MovieFragment extends Fragment {
 
             }
         });
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(SORT_SETTING_KEY)) {
+                mSortMovieBy = savedInstanceState.getString(SORT_SETTING_KEY);
+            }
+
+            if (savedInstanceState.containsKey(MOVIES_KEY)) {
+                mMovies = savedInstanceState.getParcelableArrayList(MOVIES_KEY);
+                mMovieAdapter.setData(mMovies);
+            } else {
+                updateMovies(mSortMovieBy);
+            }
+        } else {
+            updateMovies(mSortMovieBy);
+        }
         return rootView;
     }
     @Override
     public void onStart() {
         super.onStart();
-        FetchMovieTask movieData = new FetchMovieTask();
-        movieData.execute();
+        updateMovies(mSortMovieBy);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (!mSortMovieBy.contentEquals(POPULARITY_DESC)) {
+            outState.putString(SORT_SETTING_KEY, mSortMovieBy);
+        }
+        if (mMovies != null) {
+            outState.putParcelableArrayList(MOVIES_KEY, mMovies);
+        }
+        super.onSaveInstanceState(outState);
     }
 
 
-    public class FetchMovieTask extends AsyncTask<Void, Void,ArrayList<Movie>>{
+    public class FetchMovieTask extends AsyncTask<String, Void,ArrayList<Movie>>{
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
-
 
         private ArrayList<Movie> getMovieDataFromJson(String movieJsonStr)
                 throws JSONException{
@@ -119,13 +181,16 @@ public class MovieFragment extends Fragment {
 
 
         @Override
-        protected ArrayList<Movie> doInBackground(Void... voids) {
+        protected ArrayList<Movie> doInBackground(String... params) {
+
+            if(params.length == 0){
+                return null;
+            }
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             String movieJsonStr = null;
 
-            String sort_by = "popularity.desc";
             String apiKey = "e04f08387e30e9ba46f930a31e0d69fd";
 
             try{
@@ -136,7 +201,7 @@ public class MovieFragment extends Fragment {
                 final String API_PARAM = "api_key";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(SORT_PARAM, sort_by)
+                        .appendQueryParameter(SORT_PARAM,params[0])
                         .appendQueryParameter(API_PARAM,apiKey).build();
 
 
