@@ -31,11 +31,11 @@ public class DetailActivity extends AppCompatActivity {
         movieDetails.putParcelable(DetailFragment.DETAIL_MOVIE, movie);
         //Log.v("######", "received movie is " + movie);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
 
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(movieDetails);
-            getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container,new DetailFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container, fragment).commit();
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -51,47 +51,5 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class DetailFragment extends Fragment {
-
-        public static final String TAG = DetailFragment.class.getSimpleName();
-
-        static final String DETAIL_MOVIE = "DETAIL_MOVIE";
-        Movie movie;
-        public DetailFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            TextView titleView = (TextView)rootView.findViewById(R.id.titleView);
-            TextView overviewView = (TextView)rootView.findViewById(R.id.overview);
-            TextView votingView= (TextView)rootView.findViewById(R.id.voteView);
-            TextView releaseDateView = (TextView)rootView.findViewById(R.id.dateView);
-
-            Bundle bundle=getArguments();
-
-            if(bundle!=null){
-                movie = bundle.getParcelable(DETAIL_MOVIE);
-
-                if(movie!=null) {
-
-                    Log.v("######", "received title is " + movie.getTitle());
-                    Log.v("######", "received overview is " + movie.getOverview());
-                    Log.v("######", "received voting is " + movie.getRating());
-                    Log.v("######", "received releaseDate is " + movie.getDate());
-                    titleView.setText(movie.getTitle());
-                    overviewView.setText(movie.getOverview());
-                    votingView.setText(movie.getOverview());
-                    releaseDateView.setText(movie.getDate());
-                }
-            }
-            return rootView;
-        }
-    }
-
-
 }
+
