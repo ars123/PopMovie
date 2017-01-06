@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by User on 04-01-2017.
+ * Created by Arun on 04-01-2017.
  */
 public class Movie implements Parcelable {
 

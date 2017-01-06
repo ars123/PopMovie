@@ -191,7 +191,7 @@ public class MovieFragment extends Fragment {
 
             String movieJsonStr = null;
 
-            String apiKey = "ENTER YOUR API KEY HERE";
+            String apiKey = "ENTER YOUR KEY HERE";
 
             try{
 
