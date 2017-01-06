@@ -141,11 +141,11 @@ public class MovieFragment extends Fragment {
         }
         return rootView;
     }
-    @Override
+   /* @Override
     public void onStart() {
         super.onStart();
         updateMovies(mSortMovieBy);
-    }
+    }*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

@@ -6,8 +6,11 @@
     android:layout_height="match_parent"
     android:columnWidth="150dp"
     android:numColumns="auto_fit"
-    android:verticalSpacing="0dp"
-    android:horizontalSpacing="0dp"
+    android:paddingTop="60dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:verticalSpacing="12dp"
+    android:horizontalSpacing="12dp"
     android:stretchMode="columnWidth"
     tools:context=".MovieFragment"
     android:id="@+id/movies_grid">

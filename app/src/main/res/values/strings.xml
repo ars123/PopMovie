@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Pop Movies</string>
-    <string name="action_settings">Settings</string>
     <string name="title_activity_detail">Movie Detail</string>
-    <string name="releasedate">Release Date</string>
+    <string name="release_date">Release Date</string>
     <string name="title">Original Title</string>
     <string name="AverageVote">Average vote</string>
     <string name="overview">overview</string>
-    <string name="description">description</string>
     <string name="action_sort_by">Sort by</string>
     <string name="action_sort_by_popularity">Most Popular</string>
     <string name="action_sort_by_rating">Highest Rated</string>
+    <string name="details">Details</string>
+    <string name="rating">Rating</string>
 
 </resources>
