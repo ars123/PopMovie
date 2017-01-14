@@ -17,4 +17,21 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="CastStyle">
+        <item name="android:layout_width">96sp</item>
+        <item name="android:layout_height">128sp</item>
+        <item name="android:layout_gravity">center|center_horizontal|center_vertical</item>
+        <item name="android:gravity">center|center_horizontal|center_vertical</item>
+    </style>
+
+    <style name="CastTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

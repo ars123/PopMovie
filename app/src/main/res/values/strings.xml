@@ -14,5 +14,9 @@
     <string name="trailers">Trailers</string>
     <string name="reviews">Reviews</string>
     <string name="action_share">Share</string>
+    <string name="cast">Cast</string>
+
+    <string name="hint_name">Name</string>
+    <string name="hint_in_role_of">In the Role of</string>
 
 </resources>

@@ -51,12 +51,15 @@ public class DetailFragment extends Fragment {
 
     private CardView mReviewsCardview;
     private CardView mTrailersCardview;
+    private CardView mCastCardView;
 
     private LinearListView mTrailersView;
     private LinearListView mReviewsView;
+    private LinearListView mCastView;
 
     private TrailerAdapter mTrailerAdapter;
     private ReviewAdapter mReviewAdapter;
+    private CastAdapter mCastAdapter;
 
     Trailer mTrailer;
     Movie movie;
@@ -97,9 +100,11 @@ public class DetailFragment extends Fragment {
 
         mTrailersView = (LinearListView) rootView.findViewById(R.id.detail_trailers);
         mReviewsView = (LinearListView) rootView.findViewById(R.id.detail_reviews);
+        mCastView = (LinearListView)rootView.findViewById(R.id.detail_cast);
 
         mReviewsCardview = (CardView) rootView.findViewById(R.id.detail_reviews_cardview);
         mTrailersCardview = (CardView) rootView.findViewById(R.id.detail_trailers_cardview);
+        mCastCardView = (CardView)rootView.findViewById(R.id.detail_starcast_cardview);
 
         /*setting the ratingbar from @link: https://github.com/FlyingPumba/SimpleRatingBar*/
         SimpleRatingBar simpleRatingBar = (SimpleRatingBar) rootView.findViewById(R.id.movieRating);
@@ -135,6 +140,9 @@ public class DetailFragment extends Fragment {
             mReviewAdapter = new ReviewAdapter(getActivity(), new ArrayList<Review>());
             mReviewsView.setAdapter(mReviewAdapter);
 
+            mCastAdapter = new CastAdapter(getActivity(),new ArrayList<Credits>());
+            mCastView.setAdapter(mCastAdapter);
+
             if(movie!=null) {
 
                 Log.v("######", "received title is " + movie.getTitle());
@@ -162,6 +170,7 @@ public class DetailFragment extends Fragment {
         if (movie != null) {
             new FetchTrailersTask().execute(Integer.toString(movie.getId()));
             new FetchReviewsTask().execute(Integer.toString(movie.getId()));
+            new FetchCreditTask().execute(Integer.toString(movie.getId()));
         }
     }
 
@@ -394,6 +403,118 @@ public class DetailFragment extends Fragment {
             }
         }
     }
+
+
+
+    public class FetchCreditTask extends AsyncTask<String, Void, List<Credits>> {
+
+        private final String LOG_TAG = FetchCreditTask.class.getSimpleName();
+
+        private List<Credits> getCreditsDataFromJson(String jsonStr) throws JSONException {
+            JSONObject creditJson = new JSONObject(jsonStr);
+            JSONArray creditArray = creditJson.getJSONArray("cast");
+
+            List<Credits> results = new ArrayList<>();
+
+            for(int i = 0; i < creditArray.length(); i++) {
+                JSONObject credit = creditArray.getJSONObject(i);
+                results.add(new Credits(credit));
+            }
+
+            return results;
+        }
+
+        @Override
+        protected List<Credits> doInBackground(String... params) {
+
+            if (params.length == 0) {
+                return null;
+            }
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String jsonStr = null;
+
+            try {
+                final String BASE_URL = "http://api.themoviedb.org/3/movie/" + params[0] + "/credits";
+                final String API_KEY_PARAM = "api_key";
+                final String apiKey="e04f08387e30e9ba46f930a31e0d69fd";
+                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendQueryParameter(API_KEY_PARAM,apiKey )
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                Log.e(LOG_TAG,url.toString());
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                jsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                return getCreditsDataFromJson(jsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the forecast.
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Credits> credits) {
+            if (credits != null) {
+                if (credits.size() > 0) {
+                    mCastCardView.setVisibility(View.VISIBLE);
+                    if (mCastAdapter != null) {
+                        mCastAdapter.clear();
+                        for (Credits credit : credits) {
+                            mCastAdapter.add(credit);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 
 }
 

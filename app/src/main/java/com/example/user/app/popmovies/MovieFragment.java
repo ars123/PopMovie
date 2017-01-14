@@ -145,9 +145,9 @@ public class MovieFragment extends Fragment {
 
 
             } else {
-
-                updateMovies(mSortMovieBy);
                 loadingIndicatorMoviePoster.setVisibility(rootView.GONE);
+                updateMovies(mSortMovieBy);
+
             }
         }
         /* First of all check if network is connected or not then only start the loader */
@@ -155,14 +155,14 @@ public class MovieFragment extends Fragment {
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-                /*
-                 *fetch data. Get a reference to the LoaderManager, in order to interact with loaders.
-                */
-           updateMovies(mSortMovieBy);
+
+            // if internet access is present set the visibility of loading gone
             loadingIndicatorMoviePoster.setVisibility(rootView.GONE);
+            updateMovies(mSortMovieBy);
+
         }
         else {
-            //updateMovies(mSortMovieBy);
+            // load if network is not connected to internet
             loadingIndicatorMoviePoster.setVisibility(rootView.VISIBLE);
         }
         return rootView;
