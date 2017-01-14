@@ -3,14 +3,10 @@ package com.example.user.app.popmovies;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -25,11 +21,15 @@ public class DetailActivity extends AppCompatActivity {
         /**get the movie's Object from the parent activity**/
         Movie movie = getIntent().getParcelableExtra("currentMovie");
 
+        /*get the review object*/
+
+        Review review = getIntent().getParcelableExtra("movieReview");
+
 
        /* put the movie into the parsel*/
         Bundle movieDetails = new Bundle();
         movieDetails.putParcelable(DetailFragment.DETAIL_MOVIE, movie);
-        //Log.v("######", "received movie is " + movie);
+        Log.v("######", "received released date is " + movie.getDate());
 
         if (savedInstanceState == null) {
 

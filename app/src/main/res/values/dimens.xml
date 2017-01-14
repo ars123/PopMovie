@@ -7,4 +7,8 @@
     <dimen name="grid_item_movie_spacing">5dp</dimen>
     <dimen name="grid_item_movie_height">170dp</dimen>
     <dimen name="text_size">16sp</dimen>
+    <dimen name="simpleratingbar_width">162dp</dimen>
+    <dimen name="srb_starSize">24dp</dimen>
+    <dimen name="star_image_height">14dp</dimen>
+    <dimen name="star_image_width">14dp</dimen>
 </resources>

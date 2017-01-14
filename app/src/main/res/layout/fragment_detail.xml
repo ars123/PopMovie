@@ -1,5 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/movie_detail_container"
     android:visibility="invisible"
     android:paddingTop="55dp"
@@ -38,7 +39,7 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:background="#DCDCDC"
+            android:background="#ECEFF1"
             android:layout_height="wrap_content"
             android:padding="10dp">
 
@@ -53,6 +54,8 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardElevation="@dimen/cardview_compat_inset_shadow"
+                app:cardCornerRadius="4dp"
                 android:layout_marginTop="20dp">
 
                 <LinearLayout
@@ -115,18 +118,109 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"  />
 
-                        <TextView
+                       <!-- <TextView
                             android:id="@+id/voteView"
                             android:text="5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_size" />
+                            android:textSize="@dimen/text_size" />-->
+
+                        <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                            android:id="@+id/movieRating"
+                            android:layout_width="@dimen/simpleratingbar_width"
+                            android:layout_height="0dp"
+                            android:layout_gravity="end|right"
+                            android:layout_weight="1"
+                            android:gravity="end|right"
+                            app:srb_borderColor="@color/colorPrimaryDark"
+                            app:srb_fillColor="@color/colorPrimary"
+                            app:srb_isIndicator="true"
+                            app:srb_numberOfStars="5"
+                            app:srb_starSize="@dimen/srb_starSize"
+                            app:srb_stepSize="0.1" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/detail_trailers_cardview"
+                android:layout_width="match_parent"
+                app:cardElevation="@dimen/cardview_compat_inset_shadow"
+                app:cardCornerRadius="4dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="@string/trailers"
+                        android:textStyle="bold" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:layout_marginTop="20dp">
+
+                        <com.linearlistview.LinearListView
+                            android:id="@+id/detail_trailers"
+                            android:layout_width="wrap_content"
+                            android:splitMotionEvents="true"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:divider="?android:dividerHorizontal"
+                            android:showDividers="middle" />
+
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/detail_reviews_cardview"
+                android:layout_width="match_parent"
+                app:cardElevation="@dimen/cardview_compat_inset_shadow"
+                app:cardCornerRadius="4dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="@string/reviews"
+                        android:textStyle="bold" />
+
+                    <com.linearlistview.LinearListView
+                        android:id="@+id/detail_reviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:divider="?android:dividerHorizontal"
+                        android:showDividers="middle" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
 
 
         </LinearLayout>

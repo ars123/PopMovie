@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <GridView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,4 +17,17 @@
     android:stretchMode="columnWidth"
     tools:context=".MovieFragment"
     android:id="@+id/movies_grid">
+
 </GridView>
+
+ <ProgressBar
+    android:id="@+id/loading_indicator_movie_poster"
+    style="@style/Widget.AppCompat.ProgressBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_centerInParent="true"
+    android:layout_centerVertical="true"
+    android:layout_gravity="center_horizontal|center" />
+
+</RelativeLayout>

@@ -17,8 +17,8 @@ public class Movie implements Parcelable {
     private String title; // original_title
     private String posterImage; // poster_path
     private String backDropImage; // backdrop_path
-    private String overview;
-    private int rating; // vote_average
+    private String overview;  // overview
+    private double rating; // vote_average
     private String date; // release_date
 
     public Movie() {
@@ -31,7 +31,7 @@ public class Movie implements Parcelable {
         this.posterImage = movie.getString("poster_path");
         this.backDropImage = movie.getString("backdrop_path");
         this.overview = movie.getString("overview");
-        this.rating = movie.getInt("vote_average");
+        this.rating = movie.getDouble("vote_average");
         this.date = movie.getString("release_date");
     }
 
@@ -56,7 +56,7 @@ public class Movie implements Parcelable {
         return overview;
     }
 
-    public int getRating() {
+    public Double getRating() {
         return rating;
     }
 
@@ -76,7 +76,7 @@ public class Movie implements Parcelable {
         dest.writeString(posterImage);
         dest.writeString(backDropImage);
         dest.writeString(overview);
-        dest.writeInt(rating);
+        dest.writeDouble(rating);
         dest.writeString(date);
     }
 
@@ -97,7 +97,7 @@ public class Movie implements Parcelable {
         posterImage = in.readString();
         backDropImage = in.readString();
         overview = in.readString();
-        rating = in.readInt();
+        rating = in.readDouble();
         date = in.readString();
     }
 }

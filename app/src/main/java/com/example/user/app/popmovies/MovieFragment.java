@@ -1,11 +1,14 @@
 package com.example.user.app.popmovies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +45,8 @@ public class MovieFragment extends Fragment {
     private static final String RATING_DESC = "vote_average.desc";
   //  private static final String FAVORITE = "favorite";
     private static final String MOVIES_KEY = "movies";
+
+    ProgressBar loadingIndicatorMoviePoster;
 
     private String mSortMovieBy = POPULARITY_DESC;
 
@@ -103,13 +109,16 @@ public class MovieFragment extends Fragment {
 
 
     private void updateMovies(String sort_by){
-       new FetchMovieTask().execute(sort_by);
+
+        new FetchMovieTask().execute(sort_by);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView)rootView.findViewById(R.id.movies_grid);
+        loadingIndicatorMoviePoster = (ProgressBar) rootView.findViewById(R.id.loading_indicator_movie_poster);
         mMovieAdapter = new MovieAdapter(getActivity(),mMovies);
         gridView.setAdapter(mMovieAdapter);
 
@@ -129,15 +138,32 @@ public class MovieFragment extends Fragment {
             if (savedInstanceState.containsKey(SORT_SETTING_KEY)) {
                 mSortMovieBy = savedInstanceState.getString(SORT_SETTING_KEY);
             }
-
+          /* if data is already present then instantiate the arraylist with those save data */
             if (savedInstanceState.containsKey(MOVIES_KEY)) {
                 mMovies = savedInstanceState.getParcelableArrayList(MOVIES_KEY);
                 mMovieAdapter.setData(mMovies);
+
+
             } else {
+
                 updateMovies(mSortMovieBy);
+                loadingIndicatorMoviePoster.setVisibility(rootView.GONE);
             }
-        } else {
-            updateMovies(mSortMovieBy);
+        }
+        /* First of all check if network is connected or not then only start the loader */
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+                /*
+                 *fetch data. Get a reference to the LoaderManager, in order to interact with loaders.
+                */
+           updateMovies(mSortMovieBy);
+            loadingIndicatorMoviePoster.setVisibility(rootView.GONE);
+        }
+        else {
+            //updateMovies(mSortMovieBy);
+            loadingIndicatorMoviePoster.setVisibility(rootView.VISIBLE);
         }
         return rootView;
     }
@@ -191,7 +217,7 @@ public class MovieFragment extends Fragment {
 
             String movieJsonStr = null;
 
-            String apiKey = "ENTER YOUR KEY HERE";
+            String apiKey = "e04f08387e30e9ba46f930a31e0d69fd";
 
             try{
 
@@ -268,6 +294,7 @@ public class MovieFragment extends Fragment {
                     mMovieAdapter.setData(result);
                 }
                 mMovies.addAll(result);
+
             }
 
             mMovieAdapter.notifyDataSetChanged();
