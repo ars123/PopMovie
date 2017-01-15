@@ -1,47 +1,52 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/movie_detail_container"
-    android:visibility="invisible"
-    android:paddingTop="55dp"
+    android:id="@+id/main_content_movie_detail"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailFragment">
 
-    <LinearLayout
-        android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_movie_detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/detail_backdrop_height"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <RelativeLayout
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_movie_detail"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/grid_item_movie_height">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="@dimen/expandedTitleMarginEnd"
+            app:expandedTitleMarginStart="@dimen/expandedTitleMarginStart"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
-                android:id="@+id/imageThumbnail"
+                android:id="@+id/movie_detail_title_image_view_backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax" />
 
-            <TextView
-                android:id="@+id/titleView"
-                android:text="title"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_movie_detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:padding="5dp"
-                android:layout_alignParentBottom="true"
-                android:textColor="@android:color/white"
-                android:background="#80000000" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-        </RelativeLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:background="#ECEFF1"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/movie_detail_container"
+        tools:context=".DetailFragment"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <TextView
                 android:id="@+id/overView"
@@ -50,100 +55,85 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/text_size" />
-
-            <android.support.v7.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardElevation="@dimen/cardview_compat_inset_shadow"
-                app:cardCornerRadius="4dp"
-                android:layout_marginTop="20dp">
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <ImageView
+                    android:id="@+id/imageThumbnail"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/movie_detail_title_image_view_height"
+                    android:layout_weight="3"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.7" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="5"
+                    android:gravity="right"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:paddingLeft="8dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="@string/details"
-                        android:textColor="@color/textColor"
-                        android:textStyle="bold" />
+                        android:id="@+id/titleView"
+                        style="@style/MovieDetailsTextStringStyle"
+                        android:gravity="end"
+                        android:text="@string/movie_title" />
+
+                    <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                        android:id="@+id/movieRating"
+                        android:layout_width="@dimen/simpleratingbar_width"
+                        android:layout_height="0dp"
+                        android:layout_gravity="end|right"
+                        android:layout_weight="1"
+                        android:gravity="end|right"
+                        app:srb_borderColor="@color/colorPrimaryDark"
+                        app:srb_fillColor="@color/colorPrimary"
+                        app:srb_isIndicator="true"
+                        app:srb_numberOfStars="5"
+                        app:srb_starSize="@dimen/srb_starSize"
+                        app:srb_stepSize="0.1" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="20dp">
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/release_date"
-                            android:textStyle="italic"
-                            android:textColor="@color/textColor"
-                            android:textSize="@dimen/text_size" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"  />
+                            style="@style/MovieDetailsTextStringStyle"
+                            android:text="@string/released" />
 
                         <TextView
                             android:id="@+id/dateView"
-                            android:text="15 Aug 2016"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
+                            style="@style/MovieDetailsTextValueStyle"
+                            android:hint="@string/hint_movie_release_date" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/rating"
-                            android:textColor="@color/textColor"
-                            android:textStyle="italic"
-                            android:textSize="@dimen/text_size" />
+                            style="@style/MovieDetailsTextStringStyle"
+                            android:text="@string/duration" />
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"  />
-
-                       <!-- <TextView
-                            android:id="@+id/voteView"
-                            android:text="5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_size" />-->
-
-                        <com.iarcuschin.simpleratingbar.SimpleRatingBar
-                            android:id="@+id/movieRating"
-                            android:layout_width="@dimen/simpleratingbar_width"
-                            android:layout_height="0dp"
-                            android:layout_gravity="end|right"
-                            android:layout_weight="1"
-                            android:gravity="end|right"
-                            app:srb_borderColor="@color/colorPrimaryDark"
-                            app:srb_fillColor="@color/colorPrimary"
-                            app:srb_isIndicator="true"
-                            app:srb_numberOfStars="5"
-                            app:srb_starSize="@dimen/srb_starSize"
-                            app:srb_stepSize="0.1" />
-
+                        <TextView
+                            android:id="@+id/movie_duration_text_view"
+                            style="@style/MovieDetailsTextValueStyle"
+                            android:hint="@string/hint_movie_duration" />
                     </LinearLayout>
-
                 </LinearLayout>
-
-            </android.support.v7.widget.CardView>
+            </LinearLayout>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/detail_trailers_cardview"
@@ -255,11 +245,5 @@
 
             </android.support.v7.widget.CardView>
 
-
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</ScrollView>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

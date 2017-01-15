@@ -11,4 +11,12 @@
     <dimen name="srb_starSize">24dp</dimen>
     <dimen name="star_image_height">14dp</dimen>
     <dimen name="star_image_width">14dp</dimen>
+    <dimen name="voteaverage_layout_width">16dp</dimen>
+    <dimen name="card_margin">16dp</dimen>
+
+    <dimen name="detail_backdrop_height">256dp</dimen>
+    <dimen name="expandedTitleMarginEnd">64dp</dimen>
+    <dimen name="expandedTitleMarginStart">48dp</dimen>
+
+    <dimen name="movie_detail_title_image_view_height">200dp</dimen>
 </resources>

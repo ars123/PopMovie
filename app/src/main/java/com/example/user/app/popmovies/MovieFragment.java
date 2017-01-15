@@ -43,6 +43,7 @@ public class MovieFragment extends Fragment {
     private static final String SORT_SETTING_KEY = "sort_setting";
     private static final String POPULARITY_DESC = "popularity.desc";
     private static final String RATING_DESC = "vote_average.desc";
+    private static final String UPCOMING_MOVIES = "upcoming";
   //  private static final String FAVORITE = "favorite";
     private static final String MOVIES_KEY = "movies";
 
@@ -65,12 +66,19 @@ public class MovieFragment extends Fragment {
 
         MenuItem sort_by_popularity = menu.findItem(R.id.action_sort_by_popularity);
         MenuItem sort_by_rating = menu.findItem(R.id.action_sort_by_rating);
-
+        MenuItem sort_by_upcoming_movies = menu.findItem(R.id.action_sort_by_upcomingMovie);
         if (mSortMovieBy.contentEquals(POPULARITY_DESC)) {
             if (!sort_by_popularity.isChecked()) {
                 sort_by_popularity.setChecked(true);
             }
-        } else if (mSortMovieBy.contentEquals(RATING_DESC)) {
+
+        }
+        if(mSortMovieBy.contentEquals(UPCOMING_MOVIES)){
+            if(!sort_by_upcoming_movies.isChecked()){
+                sort_by_upcoming_movies.setChecked(true);
+            }
+        }
+        else if (mSortMovieBy.contentEquals(RATING_DESC)) {
             if (!sort_by_rating.isChecked()) {
                 sort_by_rating.setChecked(true);
             }
@@ -100,6 +108,15 @@ public class MovieFragment extends Fragment {
                     item.setChecked(true);
                 }
                 mSortMovieBy = RATING_DESC;
+                updateMovies(mSortMovieBy);
+                return true;
+            case R.id.action_sort_by_upcomingMovie:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+                mSortMovieBy = UPCOMING_MOVIES;
                 updateMovies(mSortMovieBy);
                 return true;
             default:
@@ -221,22 +238,57 @@ public class MovieFragment extends Fragment {
 
             try{
 
-                //For building the URL for the movies db api  http://api.themoviedb.org/3/discover/movie?sort_by=popularity_desc&api_key=
-                final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
-                final String SORT_PARAM = "sort_by";
-                final String API_PARAM = "api_key";
 
-                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(SORT_PARAM,params[0])
-                        .appendQueryParameter(API_PARAM,apiKey).build();
+                if(mSortMovieBy.equals(POPULARITY_DESC)) {
+                    //For building the URL for the movies db api  http://api.themoviedb.org/3/discover/movie?sort_by=popularity_desc&api_key=
+                    final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
+                    final String SORT_PARAM = "sort_by";
+                    final String API_PARAM = "api_key";
+
+                    Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                            .appendQueryParameter(SORT_PARAM, params[0])
+                            .appendQueryParameter(API_PARAM, apiKey).build();
 
 
+                    URL url = new URL(builtUri.toString());
+                    Log.v(LOG_TAG, "Built URI" + builtUri.toString());
 
-                URL url = new URL(builtUri.toString());
+                    urlConnection = (HttpURLConnection) url.openConnection();
 
-                Log.v(LOG_TAG, "Built URI" + builtUri.toString());
+                }if(mSortMovieBy.equals(UPCOMING_MOVIES)) {
+                    final String BASE_URL= "https://api.themoviedb.org/3/movie/upcoming?";
+                    final String SORT_PARAM = "sort_by";
+                    final String API_PARAM = "api_key";
 
-                urlConnection = (HttpURLConnection) url.openConnection();
+                    Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                            .appendQueryParameter(SORT_PARAM, params[0])
+                            .appendQueryParameter(API_PARAM, apiKey).build();
+
+
+                    URL url = new URL(builtUri.toString());
+                    Log.v(LOG_TAG, "Built URI" + builtUri.toString());
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                }
+                if(mSortMovieBy.equals(RATING_DESC)) {
+                    //For building the URL for the movies db api  http://api.themoviedb.org/3/discover/movie?sort_by=popularity_desc&api_key=
+                    final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
+                    final String SORT_PARAM = "sort_by";
+                    final String API_PARAM = "api_key";
+
+                    Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                            .appendQueryParameter(SORT_PARAM, params[0])
+                            .appendQueryParameter(API_PARAM, apiKey).build();
+
+
+                    URL url = new URL(builtUri.toString());
+                    Log.v(LOG_TAG, "Built URI" + builtUri.toString());
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                }
+
+
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 

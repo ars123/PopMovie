@@ -19,4 +19,12 @@
     <string name="hint_name">Name</string>
     <string name="hint_in_role_of">In the Role of</string>
 
+    <string name="hint_movie_title">Movie Title</string>
+    <string name="sort_by_upcoming_movies">Upcoming Movies</string>
+    <string name="movie_title">Title</string>
+    <string name="released">Released</string>
+    <string name="hint_movie_release_date">24 jan</string>
+    <string name="hint_movie_duration">140min</string>
+    <string name="duration">Duration</string>
+
 </resources>

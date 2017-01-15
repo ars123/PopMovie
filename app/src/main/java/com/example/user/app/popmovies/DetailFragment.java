@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -16,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
@@ -91,8 +91,12 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        ScrollView mMovieDetailContainer = (ScrollView)rootView.findViewById(R.id.movie_detail_container);
-        ImageView imageView = (ImageView)rootView.findViewById(R.id.imageThumbnail);
+        ImageView imageView = (ImageView)rootView.findViewById(R.id.movie_detail_title_image_view_backdrop);
+
+        NestedScrollView mMovieDetailContainer = (NestedScrollView) rootView.findViewById(R.id.movie_detail_container);
+
+
+        ImageView imageView1 = (ImageView)rootView.findViewById(R.id.imageThumbnail);
         TextView titleView = (TextView)rootView.findViewById(R.id.titleView);
         TextView overviewView = (TextView)rootView.findViewById(R.id.overView);
        // TextView votingView= (TextView)rootView.findViewById(R.id.voteView);
@@ -152,6 +156,10 @@ public class DetailFragment extends Fragment {
 
                 String imageUrl = Utility.buildImageUrl(342,movie.getBackDropImage());
                 Picasso.with(getActivity()).load(imageUrl).into(imageView);
+
+                String imageUrl1 = Utility.buildImageUrl(185,movie.getBackDropImage());
+                Picasso.with(getActivity()).load(imageUrl1).into(imageView1);
+
 
                 titleView.setText(movie.getTitle());
                 overviewView.setText(movie.getOverview());
@@ -421,6 +429,8 @@ public class DetailFragment extends Fragment {
                 results.add(new Credits(credit));
             }
 
+
+
             return results;
         }
 
@@ -500,6 +510,8 @@ public class DetailFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Credits> credits) {
+            super.onPostExecute(credits);
+            Log.v("MY_TAG", "credits result array is " + credits +"\n"+ credits.size());
             if (credits != null) {
                 if (credits.size() > 0) {
                     mCastCardView.setVisibility(View.VISIBLE);
@@ -513,9 +525,6 @@ public class DetailFragment extends Fragment {
             }
         }
     }
-
-
-
 }
 
 
