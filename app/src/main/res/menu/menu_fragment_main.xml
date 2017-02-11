@@ -11,6 +11,8 @@
                     android:title="@string/action_sort_by_rating" />
                 <item android:id="@+id/action_sort_by_upcomingMovie"
                     android:title="@string/sort_by_upcoming_movies"/>
+                <item android:id="@+id/action_sort_by_favorite"
+                    android:title="@string/action_sort_by_favorite" />
             </group>
         </menu>
     </item>

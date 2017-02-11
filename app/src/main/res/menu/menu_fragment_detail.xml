@@ -1,7 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.user.app.popmovies.DetailActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_favorite"
+        android:title="@string/action_favorite"
+        app:showAsAction="always"
+        android:icon="@drawable/abc_btn_rating_star_off_mtrl_alpha"
+        app:icon="@drawable/abc_btn_rating_star_off_mtrl_alpha" />
 
     <item android:id="@+id/action_share"
         android:title="@string/action_share"

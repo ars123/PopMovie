@@ -8,6 +8,7 @@
     <string name="action_sort_by">Sort by</string>
     <string name="action_sort_by_popularity">Most Popular</string>
     <string name="action_sort_by_rating">Highest Rated</string>
+    <string name="action_sort_by_favorite">Favorite</string>
     <string name="details">Details</string>
     <string name="rating">Rating</string>
 
@@ -26,5 +27,10 @@
     <string name="hint_movie_release_date">24 jan</string>
     <string name="hint_movie_duration">140min</string>
     <string name="duration">Duration</string>
+    <string name="action_favorite">favourite</string>
+    <string name="removed_from_favorites">Removed from Favorites</string>
+    <string name="added_to_favorites">Added to favorites</string>
+
+    <string name="content_authority">com.example.user.app.popmovies</string>
 
 </resources>
